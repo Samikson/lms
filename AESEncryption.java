@@ -16,6 +16,22 @@ public class AESEncryption {
         byte[] encVal = cipher.doFinal(data.getBytes());
         return Base64.getEncoder().encodeToString(encVal);
     }
+    
+    public static String decrypt(String encryptedData, String secretKeyBase64) throws Exception {
+        // Decode Base64-encoded key
+    	 Key key = generateKey(secretKeyBase64);
+
+        // Initialize AES cipher in ECB mode with PKCS5 padding
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, key);
+
+        // Decode Base64-encoded ciphertext
+        byte[] encryptedBytes = Base64.getDecoder().decode(encryptedData);
+
+        // Perform decryption
+        byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+        return new String(decryptedBytes, "UTF-8");
+    }
 
     private static Key generateKey(String secret) throws Exception {
         byte[] decoded = Base64.getDecoder().decode(secret.getBytes());
@@ -28,6 +44,10 @@ public class AESEncryption {
             String data = "Hello, World!";
             String encryptedData = encrypt(data, secret);
             System.out.println("Encrypted Data: " + encryptedData);
+            String encryptedInput = "/qd/vKnPvjIZPrJyNZeCCw==";
+            // Perform decryption
+            String decryptedText = decrypt(encryptedInput, secret);
+            System.out.println("Decrypted Text: " + decryptedText);
         } catch (Exception e) {
             e.printStackTrace();
         }
