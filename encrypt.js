@@ -14,6 +14,29 @@ var decryptedData = CryptoJS.AES.decrypt(encryptedCipherText, parsedBase64Key, {
     padding: CryptoJS.pad.Pkcs7
 });
 
+
+
 // Convert decrypted data to UTF-8 string
 var decryptedText = decryptedData.toString(CryptoJS.enc.Utf8);
 console.log("Decrypted Text: " + decryptedText);
+
+function encrypt(data, secretKeyBase64) {
+    // Decode Base64 key
+    const secretKey = CryptoJS.enc.Base64.parse(secretKeyBase64);
+
+    // Encrypt the data
+    const encrypted = CryptoJS.AES.encrypt(data, secretKey, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7,
+    });
+
+    // Return Base64-encoded ciphertext
+    return encrypted.toString();
+}
+
+const data = "Hello, World!";
+const secretKeyBase64 = "bXVzdGJlMTZieXRlc2tleQ=="; // Base64-encoded 16-byte key
+
+// Perform encryption
+const encryptedData = encrypt(data, secretKeyBase64);
+console.log("Encrypted Data:", encryptedData);
